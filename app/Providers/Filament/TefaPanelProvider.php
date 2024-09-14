@@ -5,6 +5,7 @@ namespace App\Providers\Filament;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\MenuItem;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -27,9 +28,18 @@ class TefaPanelProvider extends PanelProvider
             ->path('tefa')
             ->login()
             ->registration()
+            ->profile()
+            ->userMenuItems([
+                MenuItem::make()
+                ->label('Admin')
+                ->icon('heroicon-s-user-circle')
+                ->url('admin')
+                ->visible(fn (): bool => auth()->user()->is_admin)
+            ])
             ->colors([
                 'primary' => Color::Orange,
             ])
+            ->font('Jakarta Sans')
             ->discoverResources(in: app_path('Filament/Tefa/Resources'), for: 'App\\Filament\\Tefa\\Resources')
             ->discoverPages(in: app_path('Filament/Tefa/Pages'), for: 'App\\Filament\\Tefa\\Pages')
             ->pages([
@@ -38,7 +48,6 @@ class TefaPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/Tefa/Widgets'), for: 'App\\Filament\\Tefa\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
