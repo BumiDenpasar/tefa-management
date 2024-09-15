@@ -4,6 +4,8 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -17,6 +19,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
+        'id_sekolah',
         'name',
         'email',
         'password',
@@ -47,8 +50,14 @@ class User extends Authenticatable
         ];
     }
 
-    public function isAdmin(): bool
+    public function sekolah(): HasOne
     {
-        return $this->email == "admin@gmail.com";
+        return $this->hasOne(School::class, 'id', 'id_sekolah');
     }
+
+    public function produk(): HasMany
+    {
+        return $this->hasMany(Product::class, 'id_sekolah', 'id_sekolah');
+    }
+
 }

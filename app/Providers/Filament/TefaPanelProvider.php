@@ -18,6 +18,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use App\Http\Middleware\IsNotAdmin;
 
 class TefaPanelProvider extends PanelProvider
 {
@@ -29,13 +30,7 @@ class TefaPanelProvider extends PanelProvider
             ->login()
             ->registration()
             ->profile()
-            ->userMenuItems([
-                MenuItem::make()
-                ->label('Admin')
-                ->icon('heroicon-s-user-circle')
-                ->url('admin')
-                ->visible(fn (): bool => auth()->user()->is_admin)
-            ])
+           
             ->colors([
                 'primary' => Color::Orange,
             ])
@@ -62,6 +57,9 @@ class TefaPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-            ]);
+                IsNotAdmin::class,
+            ])
+            ;
+            
     }
 }
