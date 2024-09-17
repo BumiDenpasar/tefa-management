@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Auth;
 
 class Product extends Model
@@ -14,8 +15,10 @@ class Product extends Model
 
     protected $fillable = [
         'id_sekolah',
+        'img',
         'harga_produk',
         'nama_produk',
+        'deskripsi',
         'total_jual',
     ];
 
@@ -26,6 +29,22 @@ class Product extends Model
                 $builder->where('id_sekolah', Auth::user()->id_sekolah);
             }
         });
+    }
+
+
+    public function getTotalSalesAttribute()
+    {
+        return $this->sales->sum('jumlah');
+    }
+
+    public function sekolah(): BelongsTo
+    {
+        return $this->belongsTo(School::class, 'id_sekolah', 'id');
+    }
+
+    public function sales(): HasMany
+    {
+        return $this->hasMany(Sale::class, 'id_produk', 'id');
     }
 
     public function produk(): BelongsTo

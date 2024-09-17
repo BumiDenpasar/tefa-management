@@ -2,37 +2,34 @@
 
 namespace App\Filament\Tefa\Resources;
 
-use App\Filament\Tefa\Resources\ProductResource\Pages;
-use App\Filament\Tefa\Resources\ProductResource\RelationManagers;
-use App\Models\Product;
+use App\Filament\Tefa\Resources\SaleResource\Pages;
+use App\Filament\Tefa\Resources\SaleResource\RelationManagers;
+use App\Models\Sale;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Columns\Summarizers\Sum;
-use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class ProductResource extends Resource
+class SaleResource extends Resource
 {
-    protected static ?string $model = Product::class;
+    protected static ?string $model = Sale::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-           
-                Forms\Components\TextInput::make('nama_produk')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('harga_produk')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('total_jual')
+                Forms\Components\Select::make('id_produk')
+                    ->relationship('produk', 'nama_produk')
+                    ->searchable()
+                    ->preload()
+                    ->required(),
+                Forms\Components\TextInput::make('jumlah')
                     ->required()
                     ->numeric(),
             ]);
@@ -41,27 +38,29 @@ class ProductResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->query(Product::with('sales'))
             ->columns([
-                TextColumn::make('nama_produk')
-                    ->searchable(),
-                TextColumn::make('harga_produk')
-                    ->numeric()
-                    ->sortable()
-                    ->money(currency: 'IDR'),
-                    Tables\Columns\TextColumn::make('total_sales')
-                    ->label('Total Penjualan')
+                Tables\Columns\TextColumn::make('produk.nama_produk')
+                    ->searchable()
                     ->sortable(),
-                    Tables\Columns\TextColumn::make('sales.pemasukan')
-                    ->placeholder('Belum Terjual')
-                    ->label('Total Pendapatan')
+                Tables\Columns\TextColumn::make('jumlah')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('produk.harga_produk')
+                    ->label('Harga Produk')
+                    ->searchable()
                     ->sortable()
                     ->money('idr'),
-                    TextColumn::make('created_at')
+
+                Tables\Columns\TextColumn::make('pemasukan')
+                ->label('Total Pendapatan')
+                ->sortable()
+                ->money('idr'),
+
+                Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
+                Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -87,13 +86,17 @@ class ProductResource extends Resource
         ];
     }
 
+    
+
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListProducts::route('/'),
-            'create' => Pages\CreateProduct::route('/create'),
-            'view' => Pages\ViewProduct::route('/{record}'),
-            'edit' => Pages\EditProduct::route('/{record}/edit'),
+            'index' => Pages\ListSales::route('/'),
+            'create' => Pages\CreateSale::route('/create'),
+            'view' => Pages\ViewSale::route('/{record}'),
+            'edit' => Pages\EditSale::route('/{record}/edit'),
         ];
     }
+
+    
 }

@@ -6,9 +6,12 @@ use App\Filament\Resources\ProductResource\Pages;
 use App\Filament\Resources\ProductResource\RelationManagers;
 use App\Models\Product;
 use Filament\Forms;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\Summarizers\Sum;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -36,6 +39,13 @@ class ProductResource extends Resource
                 Forms\Components\TextInput::make('harga_produk')
                     ->required()
                     ->numeric(),
+                Forms\Components\Textarea::make('deskripsi')
+                    ->required()
+                    ->columnSpanFull(),
+                FileUpload::make('img')
+                    ->label('Foto Produk')
+                    ->image()
+                    ->required(),
                 Forms\Components\TextInput::make('total_jual')
                     ->required()
                     ->numeric(),
@@ -46,25 +56,31 @@ class ProductResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id_sekolah')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('nama_produk')
+                TextColumn::make('nama_produk')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('harga_produk')
-                    ->numeric()
+                TextColumn::make('sekolah.nama_sekolah')
+                    ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('total_jual')
+                TextColumn::make('harga_produk')
                     ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
+                    ->sortable()
+                    ->money(currency: 'IDR')
+                    ,
+                TextColumn::make('sales_count')
+                ->counts('sales', fn (Builder $query, Product $record) => $query->where('id_produk', '=', $record->id)),
+                TextColumn::make('total_jual')
+                    ->numeric()
+                    ->sortable()
+                    ->summarize(Sum::make()),
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+                    
             ])
             ->filters([
                 //

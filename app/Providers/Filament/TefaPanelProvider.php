@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Tefa\Resources\SchoolResource\Pages\EditSchool;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -19,18 +20,29 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use App\Http\Middleware\IsNotAdmin;
+use Illuminate\Support\Facades\Auth;
 
 class TefaPanelProvider extends PanelProvider
 {
+
+
+    
     public function panel(Panel $panel): Panel
     {
+
         return $panel
             ->id('tefa')
             ->path('tefa')
             ->login()
             ->registration()
             ->profile()
-           
+            ->userMenuItems([
+                MenuItem::make()
+                    ->label('Profile Sekolah')
+                    ->url(url(fn () => './tefa/schools/' . Auth::user()->id_sekolah . '/view'))
+                    ->icon('heroicon-o-building-office-2')
+                    ->visible(fn () => Auth::check() && Auth::user()->id_sekolah !== null),
+            ])
             ->colors([
                 'primary' => Color::Orange,
             ])
@@ -40,6 +52,7 @@ class TefaPanelProvider extends PanelProvider
             ->pages([
                 Pages\Dashboard::class,
             ])
+            ->sidebarCollapsibleOnDesktop()
             ->discoverWidgets(in: app_path('Filament/Tefa/Widgets'), for: 'App\\Filament\\Tefa\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
@@ -62,4 +75,5 @@ class TefaPanelProvider extends PanelProvider
             ;
             
     }
+    
 }

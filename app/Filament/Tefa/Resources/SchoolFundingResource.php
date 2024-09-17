@@ -2,22 +2,20 @@
 
 namespace App\Filament\Tefa\Resources;
 
-use App\Filament\Tefa\Resources\ProductResource\Pages;
-use App\Filament\Tefa\Resources\ProductResource\RelationManagers;
-use App\Models\Product;
+use App\Filament\Tefa\Resources\SchoolFundingResource\Pages;
+use App\Filament\Tefa\Resources\SchoolFundingResource\RelationManagers;
+use App\Models\SchoolFunding;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Columns\Summarizers\Sum;
-use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class ProductResource extends Resource
+class SchoolFundingResource extends Resource
 {
-    protected static ?string $model = Product::class;
+    protected static ?string $model = SchoolFunding::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -25,14 +23,10 @@ class ProductResource extends Resource
     {
         return $form
             ->schema([
-           
-                Forms\Components\TextInput::make('nama_produk')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('harga_produk')
+                Forms\Components\TextInput::make('id_sekolah')
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('total_jual')
+                Forms\Components\TextInput::make('id_bantuan')
                     ->required()
                     ->numeric(),
             ]);
@@ -41,27 +35,18 @@ class ProductResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->query(Product::with('sales'))
             ->columns([
-                TextColumn::make('nama_produk')
-                    ->searchable(),
-                TextColumn::make('harga_produk')
+                Tables\Columns\TextColumn::make('id_sekolah')
                     ->numeric()
-                    ->sortable()
-                    ->money(currency: 'IDR'),
-                    Tables\Columns\TextColumn::make('total_sales')
-                    ->label('Total Penjualan')
                     ->sortable(),
-                    Tables\Columns\TextColumn::make('sales.pemasukan')
-                    ->placeholder('Belum Terjual')
-                    ->label('Total Pendapatan')
-                    ->sortable()
-                    ->money('idr'),
-                    TextColumn::make('created_at')
+                Tables\Columns\TextColumn::make('id_bantuan')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
+                Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -90,10 +75,10 @@ class ProductResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListProducts::route('/'),
-            'create' => Pages\CreateProduct::route('/create'),
-            'view' => Pages\ViewProduct::route('/{record}'),
-            'edit' => Pages\EditProduct::route('/{record}/edit'),
+            'index' => Pages\ListSchoolFundings::route('/'),
+            'create' => Pages\CreateSchoolFunding::route('/create'),
+            'view' => Pages\ViewSchoolFunding::route('/{record}'),
+            'edit' => Pages\EditSchoolFunding::route('/{record}/edit'),
         ];
     }
 }
