@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\SchoolResource\Pages;
 use App\Filament\Resources\SchoolResource\RelationManagers;
+use App\Models\Sale;
 use App\Models\School;
 use App\Models\User;
 use Filament\Forms;
@@ -44,24 +45,19 @@ class SchoolResource extends Resource
                 Forms\Components\TextInput::make('nama_sekolah')
                     ->required()
                     ->maxLength(255),
+
                 Forms\Components\TextInput::make('nama_tefa')
-                    ->required()
                     ->maxLength(255),
                 Forms\Components\Textarea::make('deskripsi')
-                    ->required()
                     ->columnSpanFull(),
                 Forms\Components\TextInput::make('no_kontak')
-                    ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('npsn')
-                    ->required()
                     ->maxLength(255),
                 FileUpload::make('logo')
                     ->label('Logo Sekolah')
-                    ->image()
-                    ->required(),
+                    ->image(),
                 Forms\Components\TextInput::make('sosial_media')
-                    ->required()
                     ->maxLength(255),
             ]);
     }
@@ -74,6 +70,14 @@ class SchoolResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('nama_tefa')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('total_pemasukan')
+                    ->label('Total Pemasukan')
+                    ->money('idr')
+                    ->getStateUsing(function (School $record) {
+                        return Sale::whereHas('produk', function ($query) use ($record) {
+                            $query->where('id_sekolah', $record->id);
+                        })->sum('pemasukan');
+                    }),
                 Tables\Columns\TextColumn::make('no_kontak')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('npsn')
@@ -87,9 +91,8 @@ class SchoolResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->filters([
-                //
-            ])
+
+            
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
@@ -105,8 +108,6 @@ class SchoolResource extends Resource
     {
         return $infolist
             ->schema([
-
-
                 Grid::make()
                     ->schema([
                         Section::make('Profile Sekolah')
@@ -115,8 +116,8 @@ class SchoolResource extends Resource
 
                                 Split::make([
                                     ImageEntry::make('logo')
-                                    ->hiddenLabel()
-                                    ->defaultImageUrl(url('/images/school-placeholder.jpg'))
+                                        ->hiddenLabel()
+                                        ->defaultImageUrl(url('/images/school-placeholder.jpg'))
                                         ->height(285)
                                         ->extraImgAttributes([
                                             'alt' => 'Logo',
@@ -126,9 +127,9 @@ class SchoolResource extends Resource
                                     Grid::make(1)  // Use Grid for better organization
                                         ->schema([
                                             TextEntry::make('nama_sekolah')
-                                            ->hiddenLabel()
-                                            ->weight(FontWeight::SemiBold)
-                                            ->size(TextEntry\TextEntrySize::Large),
+                                                ->hiddenLabel()
+                                                ->weight(FontWeight::SemiBold)
+                                                ->size(TextEntry\TextEntrySize::Large),
                                             TextEntry::make('nama_tefa'),
                                             TextEntry::make('no_kontak')->label('No. Kontak')->copyable()
                                                 ->copyMessage('Copied!')
@@ -138,9 +139,9 @@ class SchoolResource extends Resource
                                                 ->copyMessageDuration(1500),
                                         ]),
                                     TextEntry::make('sosial_media')
-                                        ->url(url: fn(School $record): string => $record->sosial_media)
+                                        ->url(url: fn(School $record): string => $record->sosial_media ? $record->sosial_media : '')
                                         ->openUrlInNewTab()
-                                        ->label('Sosial Media'),  // Provide a clear label
+                                        ->label('Sosial Media'),
                                 ])->from('md'),
 
                             ]),

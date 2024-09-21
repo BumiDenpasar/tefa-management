@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Tefa\Widgets;
+namespace App\Filament\Widgets;
 
 use App\Models\Product;
 use App\Models\Sale;
@@ -8,7 +8,7 @@ use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class StatsOverview extends BaseWidget
-{   
+{
     protected static bool $isLazy = true;
 
     protected function getStats(): array

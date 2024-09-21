@@ -3,17 +3,16 @@
 namespace App\Filament\Tefa\Resources;
 
 use App\Filament\Tefa\Resources\ProductResource\Pages;
-use App\Filament\Tefa\Resources\ProductResource\RelationManagers;
 use App\Models\Product;
 use Filament\Forms;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+
 
 class ProductResource extends Resource
 {
@@ -21,20 +20,26 @@ class ProductResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $navigationLabel = 'Produk';
+
+    //protected static ?string $modelLabel = 'Produk';
+
+    protected static ?string $navigationGroup = 'Manajemen TeFa';
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-           
                 Forms\Components\TextInput::make('nama_produk')
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('harga_produk')
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('total_jual')
-                    ->required()
-                    ->numeric(),
+                FileUpload::make('img')
+                    ->label('Foto Produk')
+                    ->image()
+                    ->required(),
             ]);
     }
 

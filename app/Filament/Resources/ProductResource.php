@@ -55,33 +55,33 @@ class ProductResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->columns([
-                TextColumn::make('nama_produk')
-                    ->searchable(),
-                TextColumn::make('sekolah.nama_sekolah')
-                    ->searchable()
-                    ->sortable(),
-                TextColumn::make('harga_produk')
-                    ->numeric()
-                    ->sortable()
-                    ->money(currency: 'IDR')
-                    ,
-                TextColumn::make('sales_count')
-                ->counts('sales', fn (Builder $query, Product $record) => $query->where('id_produk', '=', $record->id)),
-                TextColumn::make('total_jual')
-                    ->numeric()
-                    ->sortable()
-                    ->summarize(Sum::make()),
+        ->query(Product::with('sales'))
+        ->columns([
+            TextColumn::make(name: 'sekolah.nama_sekolah')
+                ->searchable(),
+            TextColumn::make('nama_produk')
+                ->searchable(),
+            TextColumn::make('harga_produk')
+                ->numeric()
+                ->sortable()
+                ->money(currency: 'IDR'),
+                Tables\Columns\TextColumn::make('total_sales')
+                ->label('Total Penjualan')
+                ->sortable(),
+                Tables\Columns\TextColumn::make('sales.pemasukan')
+                ->placeholder('Belum Terjual')
+                ->label('Total Pendapatan')
+                ->sortable()
+                ->money('idr'),
                 TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                    
-            ])
+                ->dateTime()
+                ->sortable()
+                ->toggleable(isToggledHiddenByDefault: true),
+            TextColumn::make('updated_at')
+                ->dateTime()
+                ->sortable()
+                ->toggleable(isToggledHiddenByDefault: true),
+        ])
             ->filters([
                 //
             ])

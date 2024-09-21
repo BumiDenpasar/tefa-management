@@ -17,7 +17,13 @@ class SchoolFundingResource extends Resource
 {
     protected static ?string $model = SchoolFunding::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-banknotes';
+
+    protected static ?string $navigationLabel = 'Bantuan';
+
+    // protected static ?string $modelLabel = 'Sekolah';
+
+    protected static ?string $navigationGroup = 'Manajemen Sekolah';
 
     public static function form(Form $form): Form
     {
@@ -36,16 +42,24 @@ class SchoolFundingResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id_sekolah')
+                Tables\Columns\TextColumn::make('bantuan.nama_bantuan')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('id_bantuan')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('bantuan.total_bantuan')
+                    ->label('Total Bantuan')
+                    ->searchable()
+                    ->sortable()
+                    ->money('idr'),
+                Tables\Columns\TextColumn::make('bantuan.sumber_bantuan')
+                    ->label('Sumber bantuan')
+                    ->searchable()
+                    ->sortable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
+                    ->label('Tanggal')
+                    ->date()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: false),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()

@@ -52,7 +52,7 @@ class User extends Authenticatable
 
     public function sekolah(): HasOne
     {
-        return $this->hasOne(School::class, 'id', 'id_sekolah');
+        return $this->hasOne(School::class, 'id_sekolah', 'id_sekolah');
     }
 
     public function produk(): HasMany

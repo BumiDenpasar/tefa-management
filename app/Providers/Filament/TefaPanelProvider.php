@@ -36,15 +36,21 @@ class TefaPanelProvider extends PanelProvider
             ->login()
             ->registration()
             ->profile()
-            ->userMenuItems([
-                MenuItem::make()
-                    ->label('Profile Sekolah')
-                    ->url(url(fn () => './tefa/schools/' . Auth::user()->id_sekolah . '/view'))
-                    ->icon('heroicon-o-building-office-2')
-                    ->visible(fn () => Auth::check() && Auth::user()->id_sekolah !== null),
-            ])
+            // ->userMenuItems([
+            //     MenuItem::make()
+            //         ->label('Profile Sekolah')
+            //         ->url(url(fn () => './tefa/schools/' . Auth::user()->id_sekolah . '/view'))
+            //         ->icon('heroicon-o-building-office-2')
+            //         ->visible(fn () => Auth::check() && Auth::user()->id_sekolah !== null),
+            // ])
             ->colors([
-                'primary' => Color::Orange,
+                'danger' => Color::Red,
+                'gray' => Color::Zinc,
+                'info' => Color::Blue,
+                'primary' => Color::Purple,
+                'background' => Color::Gray,
+                'success' => Color::Green,
+                'warning' => Color::Amber,
             ])
             ->font('Jakarta Sans')
             ->discoverResources(in: app_path('Filament/Tefa/Resources'), for: 'App\\Filament\\Tefa\\Resources')

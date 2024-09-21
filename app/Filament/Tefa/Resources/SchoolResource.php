@@ -28,7 +28,15 @@ class SchoolResource extends Resource
 {
     protected static ?string $model = School::class;
 
-    protected static bool $shouldRegisterNavigation = false;
+    protected static ?string $navigationIcon = 'heroicon-o-building-office-2';
+
+    protected static ?string $navigationLabel = 'Sekolah';
+
+    // protected static ?string $modelLabel = 'Sekolah';
+
+    protected static ?string $navigationGroup = 'Manajemen Sekolah';
+
+    //protected static bool $shouldRegisterNavigation = false;
 
 
     public static function form(Form $form): Form
@@ -66,6 +74,7 @@ class SchoolResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('nama_sekolah')
                     ->searchable(),
+                
                 Tables\Columns\TextColumn::make('nama_tefa')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('no_kontak')
@@ -119,10 +128,10 @@ class SchoolResource extends Resource
                                                 ->copyMessage('Copied!')
                                                 ->copyMessageDuration(1500),
                                         ]),
-                                    TextEntry::make('sosial_media')
-                                        ->url(url: fn(School $record): string => $record->sosial_media)
+                                        TextEntry::make('sosial_media')
+                                        ->url(url: fn(School $record): string => $record->sosial_media ? $record->sosial_media : '')
                                         ->openUrlInNewTab()
-                                        ->label('Sosial Media'),  // Provide a clear label
+                                        ->label('Sosial Media'),
                                 ])->from('md'),
 
                             ]),
@@ -190,6 +199,7 @@ class SchoolResource extends Resource
                                                         ->weight(FontWeight::SemiBold)
                                                         ->size(TextEntry\TextEntrySize::ExtraSmall),
                                                     TextEntry::make('deskripsi')
+                                                        ->limit(150)
                                                         ->hiddenLabel()
                                                         ->size(TextEntry\TextEntrySize::Small),
                                                 ])->columns(1),

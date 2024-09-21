@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Support\Facades\Auth;
 
 class School extends Model
@@ -48,5 +49,10 @@ class School extends Model
     public function produk(): HasMany
     {
         return $this->hasMany(Product::class, 'id_sekolah', 'id');
+    }
+
+    public function sales() : HasOneThrough
+    {
+        return $this->hasOneThrough(Sale::class, Product::class, 'id_sekolah', 'id_produk', localKey: 'id', secondLocalKey: 'id');
     }
 }

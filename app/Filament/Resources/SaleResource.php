@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Filament\Tefa\Resources;
+namespace App\Filament\Resources;
 
-use App\Filament\Tefa\Resources\SaleResource\Pages;
-use App\Filament\Tefa\Resources\SaleResource\RelationManagers;
+use App\Filament\Resources\SaleResource\Pages;
+use App\Filament\Resources\SaleResource\RelationManagers;
 use App\Models\Sale;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -25,7 +25,6 @@ class SaleResource extends Resource
 
     protected static ?string $navigationGroup = 'Manajemen TeFa';
 
-    
     public static function form(Form $form): Form
     {
         return $form
@@ -45,6 +44,9 @@ class SaleResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('sekolah.nama_sekolah')
+                ->searchable()
+                ->sortable(),
                 Tables\Columns\TextColumn::make('produk.nama_produk')
                     ->searchable()
                     ->sortable(),
@@ -86,24 +88,10 @@ class SaleResource extends Resource
             ]);
     }
 
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
-    }
-
-    
-
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListSales::route('/'),
-            'create' => Pages\CreateSale::route('/create'),
-            'view' => Pages\ViewSale::route('/{record}'),
-            'edit' => Pages\EditSale::route('/{record}/edit'),
+            'index' => Pages\ManageSales::route('/'),
         ];
     }
-
-    
 }
