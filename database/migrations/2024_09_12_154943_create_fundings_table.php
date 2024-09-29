@@ -13,20 +13,20 @@ return new class extends Migration
     {
         Schema::create('fundings', function (Blueprint $table) {
             $table->id();
-            $table->string(column: 'nama_bantuan');
-            $table->bigInteger('total_bantuan');
-            $table->string('sumber_bantuan');
+            $table->string(column: 'name');
+            $table->bigInteger('amount');
+            $table->string('source');
             $table->timestamps();
         });
 
         Schema::create('school_fundings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_sekolah')
+            $table->foreignId('school_id')
             ->references('id')->on('schools')
             ->constrained()
             ->onUpdate('cascade')
             ->onDelete('cascade');
-            $table->foreignId('id_bantuan')
+            $table->foreignId('funding_id')
             ->references('id')->on('fundings')
             ->constrained()
             ->onUpdate('cascade')

@@ -13,12 +13,13 @@ return new class extends Migration
     {
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_produk')
+            $table->foreignId('product_id')
             ->references('id')->on('products')
             ->constrained()
             ->onUpdate('cascade')
             ->onDelete('cascade');
-            $table->integer('jumlah');
+            $table->integer('amount');
+            $table->integer('income');
             $table->timestamps();
         });
     }

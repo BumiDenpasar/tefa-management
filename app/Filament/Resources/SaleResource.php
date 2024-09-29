@@ -19,22 +19,18 @@ class SaleResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-presentation-chart-line';
 
-    protected static ?string $navigationLabel = 'Riwayat Penjualan';
-
-    //protected static ?string $modelLabel = 'Produk';
-
-    protected static ?string $navigationGroup = 'Manajemen TeFa';
+    protected static ?string $navigationGroup = 'TeFa Management';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('id_produk')
-                    ->relationship('produk', 'nama_produk')
+                Forms\Components\Select::make('product_id')
+                    ->relationship('product', 'name')
                     ->searchable()
                     ->preload()
                     ->required(),
-                Forms\Components\TextInput::make('jumlah')
+                Forms\Components\TextInput::make('amount')
                     ->required()
                     ->numeric(),
             ]);
@@ -44,28 +40,26 @@ class SaleResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('sekolah.nama_sekolah')
+                Tables\Columns\TextColumn::make('school.name')
                 ->searchable()
                 ->sortable(),
-                Tables\Columns\TextColumn::make('produk.nama_produk')
+                Tables\Columns\TextColumn::make('product.name')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('jumlah')
+                Tables\Columns\TextColumn::make('amount')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('produk.harga_produk')
-                    ->label('Harga Produk')
+                Tables\Columns\TextColumn::make('product.price')
+                    ->label('Price')
                     ->searchable()
                     ->sortable()
                     ->money('idr'),
 
-                Tables\Columns\TextColumn::make('pemasukan')
-                ->label('Total Pendapatan')
+                Tables\Columns\TextColumn::make('income')
                 ->sortable()
                 ->money('idr'),
 
                 Tables\Columns\TextColumn::make('created_at')
-                ->label('Tanggal')
                 ->date()
                 ->sortable()
                 ->toggleable(isToggledHiddenByDefault: false),

@@ -2,7 +2,9 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Auth\Register;
 use App\Filament\Tefa\Resources\SchoolResource\Pages\EditSchool;
+use Filament\Enums\ThemeMode;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -34,7 +36,7 @@ class TefaPanelProvider extends PanelProvider
             ->id('tefa')
             ->path('tefa')
             ->login()
-            ->registration()
+            ->registration(Register::class)
             ->profile()
             // ->userMenuItems([
             //     MenuItem::make()
@@ -52,7 +54,9 @@ class TefaPanelProvider extends PanelProvider
                 'success' => Color::Green,
                 'warning' => Color::Amber,
             ])
+            ->defaultThemeMode(ThemeMode::Light)
             ->font('Jakarta Sans')
+            ->favicon('images/icon.png')
             ->discoverResources(in: app_path('Filament/Tefa/Resources'), for: 'App\\Filament\\Tefa\\Resources')
             ->discoverPages(in: app_path('Filament/Tefa/Pages'), for: 'App\\Filament\\Tefa\\Pages')
             ->pages([

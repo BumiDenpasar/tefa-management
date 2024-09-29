@@ -12,17 +12,17 @@ class SchoolFunding extends Model
     
 
     protected $fillable = [
-        'id_sekolah',
-        'id_bantuan',
+        'school_id',
+        'funding_id',
     ];
 
-    public function sekolah(): HasMany
+    public function schools(): HasMany
     {
-        return $this->hasMany(School::class, 'id', 'id_sekolah');
+        return $this->hasMany(School::class, 'id', 'school_id');
     }
 
-    public function bantuan(): HasMany
+    public function fundings(): HasMany
     {
-        return $this->hasMany(Funding::class,'id', 'id_bantuan');
+        return $this->hasMany(Funding::class,'id', 'funding_id');
     }
 }

@@ -20,9 +20,7 @@ class FundingResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-banknotes';
 
-    protected static ?string $navigationLabel = 'Bantuan';
-
-    protected static ?string $navigationGroup = 'Manajemen Bantuan';
+    protected static ?string $navigationGroup = 'Fundings Management';
 
 
     //protected static ?string $modelLabel = 'Sekolah';
@@ -31,13 +29,13 @@ class FundingResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('nama_bantuan')
+                Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('total_bantuan')
+                Forms\Components\TextInput::make('amount')
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('sumber_bantuan')
+                Forms\Components\TextInput::make('source')
                     ->required()
                     ->maxLength(255),
             ]);
@@ -47,12 +45,12 @@ class FundingResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('nama_bantuan')
+                Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('total_bantuan')
+                Tables\Columns\TextColumn::make('amount')
                     ->money(currency: 'IDR')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('sumber_bantuan')
+                Tables\Columns\TextColumn::make('source')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->date()

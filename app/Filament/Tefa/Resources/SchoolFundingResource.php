@@ -19,22 +19,28 @@ class SchoolFundingResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-banknotes';
 
-    protected static ?string $navigationLabel = 'Bantuan';
+    protected static ?string $navigationLabel = 'Fundings';
 
     // protected static ?string $modelLabel = 'Sekolah';
 
-    protected static ?string $navigationGroup = 'Manajemen Sekolah';
+    protected static ?string $navigationGroup = 'School Management';
 
     public static function form(Form $form): Form
     {
+
         return $form
             ->schema([
-                Forms\Components\TextInput::make('id_sekolah')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('id_bantuan')
-                    ->required()
-                    ->numeric(),
+                Forms\Components\Select::make('school_id')
+                    ->relationship('schools', 'name')
+                    ->searchable()
+                    ->preload()
+                    ->required(),
+
+                Forms\Components\Select::make('funding_id')
+                    ->relationship('fundings', 'name')
+                    ->searchable()
+                    ->preload()
+                    ->required(),
             ]);
     }
 
@@ -42,21 +48,21 @@ class SchoolFundingResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('bantuan.nama_bantuan')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('bantuan.total_bantuan')
-                    ->label('Total Bantuan')
-                    ->searchable()
-                    ->sortable()
-                    ->money('idr'),
-                Tables\Columns\TextColumn::make('bantuan.sumber_bantuan')
-                    ->label('Sumber bantuan')
+                Tables\Columns\TextColumn::make('fundings.name')
+                ->searchable()
+                ->sortable(),
+            Tables\Columns\TextColumn::make('fundings.amount')
+                ->label('Amount')
+                ->money(currency: 'IDR')
+                ->searchable()
+                ->sortable(),
+                Tables\Columns\TextColumn::make('fundings.source')
+                    ->label('Source')
                     ->searchable()
                     ->sortable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label('Tanggal')
+                    ->label('Date')
                     ->date()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: false),

@@ -22,66 +22,57 @@ class ProductResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationLabel = 'Produk';
-
-    //protected static ?string $modelLabel = 'Produk';
-
-    protected static ?string $navigationGroup = 'Manajemen TeFa';
+    protected static ?string $navigationGroup = 'TeFa Management';
 
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('nama_produk')
+                Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('harga_produk')
+                Forms\Components\TextInput::make('price')
                     ->required()
                     ->numeric(),
-                Forms\Components\Textarea::make('deskripsi')
+                Forms\Components\Textarea::make('description')
                     ->required()
                     ->columnSpanFull(),
                 FileUpload::make('img')
-                    ->label('Foto Produk')
+                    ->label('Photo')
                     ->image()
                     ->required(),
-                Forms\Components\TextInput::make('total_jual')
-                    ->required()
-                    ->numeric(),
             ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
-        ->query(Product::with('sales'))
-        ->columns([
-            TextColumn::make(name: 'sekolah.nama_sekolah')
-                ->searchable(),
-            TextColumn::make('nama_produk')
-                ->searchable(),
-            TextColumn::make('harga_produk')
-                ->numeric()
-                ->sortable()
-                ->money(currency: 'IDR'),
+            ->query(Product::with('sales'))
+            ->columns([
+                TextColumn::make('name')
+                    ->searchable(),
+                TextColumn::make('price')
+                    ->numeric()
+                    ->sortable()
+                    ->money(currency: 'IDR'),
                 Tables\Columns\TextColumn::make('total_sales')
-                ->label('Total Penjualan')
-                ->sortable(),
-                Tables\Columns\TextColumn::make('sales.pemasukan')
-                ->placeholder('Belum Terjual')
-                ->label('Total Pendapatan')
-                ->sortable()
-                ->money('idr'),
-                TextColumn::make('created_at')
-                ->dateTime()
-                ->sortable()
-                ->toggleable(isToggledHiddenByDefault: true),
-            TextColumn::make('updated_at')
-                ->dateTime()
-                ->sortable()
-                ->toggleable(isToggledHiddenByDefault: true),
-        ])
+                    ->label('Total Sales')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('total_profit')
+                    ->placeholder('-')
+                    ->label('Total Income')
+                    ->sortable()
+                    ->money('idr'),
+                    TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('updated_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+            ])
             ->filters([
                 //
             ])

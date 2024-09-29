@@ -19,7 +19,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'id_sekolah',
+        'school_id',
         'name',
         'email',
         'password',
@@ -50,12 +50,12 @@ class User extends Authenticatable
         ];
     }
 
-    public function sekolah(): HasOne
+    public function school(): HasOne
     {
-        return $this->hasOne(School::class, 'id_sekolah', 'id_sekolah');
+        return $this->hasOne(School::class, 'id', 'id_sekolah');
     }
 
-    public function produk(): HasMany
+    public function products(): HasMany
     {
         return $this->hasMany(Product::class, 'id_sekolah', 'id_sekolah');
     }

@@ -13,9 +13,9 @@ class CreateSale extends CreateRecord
 
     public function mutateFormDataBeforeCreate(array $data): array
     {
-        $product = Product::find($data['id_produk']);
+        $product = Product::find($data['product_id']);
 
-        $data['pemasukan'] = $data['jumlah'] * $product->harga_produk;
+        $data['income'] = $data['amount'] * $product->price;
         return $data;
     }
 }

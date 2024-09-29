@@ -16,13 +16,12 @@ class School extends Model
     use HasFactory;
 
     protected $fillable = [
-        'id_user',
+        'name',
         'logo',
-        'nama_sekolah',
-        'sosial_media',
-        'nama_tefa',
-        'deskripsi',
-        'no_kontak',
+        'social_media',
+        'tefa_name',
+        'description',
+        'contact_number',
         'npsn',
     ];
 
@@ -30,29 +29,29 @@ class School extends Model
     {
         static::addGlobalScope('by_user', function (Builder $builder){
             if(Auth::check() && !Auth::user()->is_admin){
-                $builder->where('id', Auth::user()->id_sekolah);
+                $builder->where('id', Auth::user()->school_id);
             }
         });
     }
 
 
-    public function bantuan(): BelongsToMany
+    public function fundings(): BelongsToMany
     {
-        return $this->BelongsToMany(Funding::class, "school_fundings", "id_sekolah", "id_bantuan");
+        return $this->BelongsToMany(Funding::class, "school_fundings", "school_id", "funding_id");
     }
 
     public function users(): HasMany
     {
-        return $this->hasMany(User::class, "id_sekolah", 'id');
+        return $this->hasMany(User::class, "school_id", 'id');
     }
 
-    public function produk(): HasMany
+    public function products(): HasMany
     {
-        return $this->hasMany(Product::class, 'id_sekolah', 'id');
+        return $this->hasMany(Product::class, 'school_id', 'id');
     }
 
-    public function sales() : HasOneThrough
+    public function sale() : HasOneThrough
     {
-        return $this->hasOneThrough(Sale::class, Product::class, 'id_sekolah', 'id_produk', localKey: 'id', secondLocalKey: 'id');
+        return $this->hasOneThrough(Sale::class, Product::class, 'school_id', 'product_id', localKey: 'id', secondLocalKey: 'id');
     }
 }

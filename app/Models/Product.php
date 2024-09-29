@@ -14,19 +14,19 @@ class Product extends Model
     use HasFactory;
 
     protected $fillable = [
-        'id_sekolah',
+        'school_id',
         'img',
-        'harga_produk',
-        'nama_produk',
-        'deskripsi',
-        'total_jual',
+        'description',
+        'price',
+        'name',
+        'total_sales',
     ];
 
     protected static function booted(): void
     {
         static::addGlobalScope('by_user', function (Builder $builder){
             if(Auth::check() && !Auth::user()->is_admin){
-                $builder->where('id_sekolah', Auth::user()->id_sekolah);
+                $builder->where('school_id', Auth::user()->school_id);
             }
         });
     }
@@ -34,20 +34,25 @@ class Product extends Model
 
     public function getTotalSalesAttribute()
     {
-        return $this->sales->sum('jumlah');
+        return $this->sales->sum('amount');
     }
 
-    public function sekolah(): BelongsTo
+    public function getTotalProfitAttribute()
     {
-        return $this->belongsTo(School::class, 'id_sekolah', 'id');
+        return $this->sales->sum('income');
+    }
+
+    public function school(): BelongsTo
+    {
+        return $this->belongsTo(School::class, 'school_id', 'id');
     }
 
     public function sales(): HasMany
     {
-        return $this->hasMany(Sale::class, 'id_produk', 'id');
+        return $this->hasMany(Sale::class, 'product_id', 'id');
     }
 
-    public function produk(): BelongsTo
+    public function product(): BelongsTo
     {
         return $this->belongsTo(School::class);
     }

@@ -14,25 +14,25 @@ class StatsOverview extends BaseWidget
     protected function getStats(): array
     {
          // Hitung jumlah produk terjual
-         $totalProductsSold = Sale::sum('jumlah');
+         $totalProductsSold = Sale::sum('amount');
 
          // Hitung total penjualan
          $totalProduct = Product::count();
  
          // Hitung total pemasukan
-         $totalRevenue = Sale::sum('pemasukan');
+         $totalRevenue = Sale::sum('income');
  
          $previousMonthSales = Sale::whereMonth('created_at', now()->subMonth()->month)
-         ->sum('jumlah');
+         ->sum('amount');
          
         $currentMonthSales = Sale::whereMonth('created_at', now()->month)
-        ->sum('jumlah');
+        ->sum('amount');
 
         $currentMonthProfit = Sale::whereMonth('created_at', now()->month)
-        ->sum('pemasukan');
+        ->sum('income');
 
         $previousMonthProfit = Sale::whereMonth('created_at', now()->subMonth()->month)
-        ->sum('pemasukan');
+        ->sum('income');
 
         $profitGrowth = $previousMonthProfit > 0 ? (($currentMonthProfit - $previousMonthProfit) / $previousMonthProfit) * 100 : 100;
         
@@ -40,20 +40,20 @@ class StatsOverview extends BaseWidget
 
          
         return [
-            Stat::make('Total Produk', number_format($totalProduct)),
-            Stat::make('Total Produk Terjual', number_format($totalProductsSold))
+            Stat::make('Total Product', number_format($totalProduct)),
+            Stat::make('Total Sales', number_format($totalProductsSold))
             ->description($salesGrowth.'% increase')
             ->descriptionIcon('heroicon-m-arrow-trending-up')
             ->color($salesGrowth > 0 ? "success" : "danger"),
 
-            Stat::make('Total Pemasukan', 'Rp ' . number_format($totalRevenue))
+            Stat::make('Total Income', 'Rp ' . number_format($totalRevenue))
             ->description($profitGrowth.'% increase')
             ->descriptionIcon('heroicon-m-arrow-trending-up')
             ->color($salesGrowth > 0 ? "success" : "danger"),
             
-            Stat::make('Produk Terjual Bulan Ini', number_format($currentMonthSales)),
-            Stat::make('Produk Terjual Bulan Lalu', number_format($previousMonthSales)),
-            Stat::make('Pemasukan Bulan Lalu', 'Rp ' . number_format($previousMonthProfit)),
+            Stat::make('This Month Sales', number_format($currentMonthSales)),
+            Stat::make('Previous Month Sales', number_format($previousMonthSales)),
+            Stat::make('Previous Month Income', 'Rp ' . number_format($previousMonthProfit)),
 
             
         ];

@@ -23,23 +23,23 @@ class SchoolFundingResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-calendar';
 
-    protected static ?string $navigationLabel = 'Riwayat Bantuan';
+    protected static ?string $navigationLabel = 'Fundings History';
 
-    protected static ?string $navigationGroup = 'Manajemen Bantuan';
+    protected static ?string $navigationGroup = 'Fundings Management';
 
     public static function form(Form $form): Form
     {
 
         return $form
             ->schema([
-                Forms\Components\Select::make('id_sekolah')
-                    ->relationship('sekolah', 'nama_sekolah')
+                Forms\Components\Select::make('school_id')
+                    ->relationship('schools', 'name')
                     ->searchable()
                     ->preload()
                     ->required(),
 
-                Forms\Components\Select::make('id_bantuan')
-                    ->relationship('bantuan', 'nama_bantuan')
+                Forms\Components\Select::make('funding_id')
+                    ->relationship('fundings', 'name')
                     ->searchable()
                     ->preload()
                     ->required(),
@@ -50,35 +50,42 @@ class SchoolFundingResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('sekolah.nama_sekolah')
+                Tables\Columns\TextColumn::make('schools.name')
+                    ->label('School')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('bantuan.nama_bantuan')
+                Tables\Columns\TextColumn::make('fundings.name')
+                    ->label('Funding')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('bantuan.total_bantuan')
-                    ->label('Total Bantuan')
+                Tables\Columns\TextColumn::make('fundings.amount')
+                    ->label('Amount')
                     ->money(currency: 'IDR')
                     ->searchable()
+                    ->sortable(),
+                 Tables\Columns\TextColumn::make('fundings.source')
+                    ->label('Source')
+                    ->searchable()
+                    ->sortable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->date()
                     ->sortable(),
-            ])->defaultSort('bantuan.total_bantuan')
+            ])->defaultSort('fundings.amount')
 
 
             ->filters([
-                SelectFilter::make('sekolah')
-                    ->relationship('sekolah', 'nama_sekolah')
-                    ->label('Filter sekolah')
-                    ->indicator('Sekolah'),
+                SelectFilter::make('schools')
+                    ->relationship('schools', 'name')
+                    ->label('School Filter')
+                    ->indicator('School'),
 
                 Filter::make('created_at')
                     ->form([
                         DatePicker::make('created_from')
-                        ->label('Dibuat dari tanggal'),
+                        ->label('From'),
                         DatePicker::make('created_until')
-                        ->label('Sampai tanggal'),
+                        ->label('To'),
                     ])
                     ->query(function (Builder $query, array $data): Builder {
                         return $query

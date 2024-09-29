@@ -24,8 +24,8 @@ class UserResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('id_sekolah')
-                    ->relationship('sekolah', 'nama_sekolah')
+                Forms\Components\Select::make('school_id')
+                    ->relationship('school', 'name')
                     ->searchable()
                     ->preload()
                     ->required(),
@@ -38,7 +38,6 @@ class UserResource extends Resource
                     ->maxLength(255),
                 Forms\Components\Toggle::make('is_admin')
                     ->required(),
-                Forms\Components\DateTimePicker::make('email_verified_at'),
                 Forms\Components\TextInput::make('password')
                     ->password()
                     ->required()
@@ -50,7 +49,7 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('sekolah.nama_sekolah')
+                Tables\Columns\TextColumn::make('school.name')
                     ->placeholder('Admin')
                     ->numeric()
                     ->sortable(),
@@ -60,9 +59,6 @@ class UserResource extends Resource
                     ->searchable(),
                 Tables\Columns\IconColumn::make('is_admin')
                     ->boolean(),
-                Tables\Columns\TextColumn::make('email_verified_at')
-                    ->dateTime()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

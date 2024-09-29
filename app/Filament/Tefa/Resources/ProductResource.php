@@ -20,26 +20,27 @@ class ProductResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationLabel = 'Produk';
+    protected static ?string $navigationLabel = 'Product';
 
-    //protected static ?string $modelLabel = 'Produk';
-
-    protected static ?string $navigationGroup = 'Manajemen TeFa';
+    protected static ?string $navigationGroup = 'TeFa Management';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('nama_produk')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('harga_produk')
-                    ->required()
-                    ->numeric(),
-                FileUpload::make('img')
-                    ->label('Foto Produk')
-                    ->image()
-                    ->required(),
+                Forms\Components\TextInput::make('name')
+                ->required()
+                ->maxLength(255),
+            Forms\Components\TextInput::make('price')
+                ->required()
+                ->numeric(),
+            Forms\Components\Textarea::make('description')
+                ->required()
+                ->columnSpanFull(),
+            FileUpload::make('img')
+                ->label('Photo')
+                ->image()
+                ->required(),
             ]);
     }
 
@@ -48,18 +49,18 @@ class ProductResource extends Resource
         return $table
             ->query(Product::with('sales'))
             ->columns([
-                TextColumn::make('nama_produk')
+                TextColumn::make('name')
                     ->searchable(),
-                TextColumn::make('harga_produk')
+                TextColumn::make('price')
                     ->numeric()
                     ->sortable()
                     ->money(currency: 'IDR'),
-                    Tables\Columns\TextColumn::make('total_sales')
-                    ->label('Total Penjualan')
+                Tables\Columns\TextColumn::make('total_sales')
+                    ->label('Total Sales')
                     ->sortable(),
-                    Tables\Columns\TextColumn::make('sales.pemasukan')
-                    ->placeholder('Belum Terjual')
-                    ->label('Total Pendapatan')
+                Tables\Columns\TextColumn::make('total_profit')
+                    ->placeholder('-')
+                    ->label('Total Income')
                     ->sortable()
                     ->money('idr'),
                     TextColumn::make('created_at')

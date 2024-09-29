@@ -31,33 +31,33 @@ class SchoolResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-building-office-2';
 
-    protected static ?string $navigationLabel = 'Sekolah';
+    protected static ?string $navigationLabel = 'Schools';
 
     // protected static ?string $modelLabel = 'Sekolah';
 
-    protected static ?string $navigationGroup = 'Manajemen TeFa';
+    protected static ?string $navigationGroup = 'TeFa Management';
 
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('nama_sekolah')
+                Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
 
-                Forms\Components\TextInput::make('nama_tefa')
+                Forms\Components\TextInput::make('tefa_name')
                     ->maxLength(255),
-                Forms\Components\Textarea::make('deskripsi')
+                Forms\Components\Textarea::make('description')
                     ->columnSpanFull(),
-                Forms\Components\TextInput::make('no_kontak')
+                Forms\Components\TextInput::make('contact_number')
                     ->maxLength(255),
                 Forms\Components\TextInput::make('npsn')
                     ->maxLength(255),
                 FileUpload::make('logo')
-                    ->label('Logo Sekolah')
+                    ->label('Logo')
                     ->image(),
-                Forms\Components\TextInput::make('sosial_media')
+                Forms\Components\TextInput::make('social_media')
                     ->maxLength(255),
             ]);
     }
@@ -66,19 +66,19 @@ class SchoolResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('nama_sekolah')
+                Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('nama_tefa')
+                Tables\Columns\TextColumn::make('tefa_name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('total_pemasukan')
-                    ->label('Total Pemasukan')
+                Tables\Columns\TextColumn::make('income')
+                    ->label('Total Income')
                     ->money('idr')
                     ->getStateUsing(function (School $record) {
-                        return Sale::whereHas('produk', function ($query) use ($record) {
-                            $query->where('id_sekolah', $record->id);
-                        })->sum('pemasukan');
+                        return Sale::whereHas('product', function ($query) use ($record) {
+                            $query->where('school_id', $record->id);
+                        })->sum('income');
                     }),
-                Tables\Columns\TextColumn::make('no_kontak')
+                Tables\Columns\TextColumn::make('contact_number')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('npsn')
                     ->searchable(),
@@ -110,7 +110,7 @@ class SchoolResource extends Resource
             ->schema([
                 Grid::make()
                     ->schema([
-                        Section::make('Profile Sekolah')
+                        Section::make('School Profile')
                             ->collapsible()  // Add collapsible functionality
                             ->schema([
 
@@ -126,22 +126,21 @@ class SchoolResource extends Resource
                                         ->circular(),
                                     Grid::make(1)  // Use Grid for better organization
                                         ->schema([
-                                            TextEntry::make('nama_sekolah')
+                                            TextEntry::make('name')
                                                 ->hiddenLabel()
                                                 ->weight(FontWeight::SemiBold)
                                                 ->size(TextEntry\TextEntrySize::Large),
-                                            TextEntry::make('nama_tefa'),
-                                            TextEntry::make('no_kontak')->label('No. Kontak')->copyable()
+                                            TextEntry::make('tefa_name'),
+                                            TextEntry::make('contact_number')->copyable()
                                                 ->copyMessage('Copied!')
                                                 ->copyMessageDuration(1500),
                                             TextEntry::make('npsn')->label('NPSN')->copyable()
                                                 ->copyMessage('Copied!')
                                                 ->copyMessageDuration(1500),
                                         ]),
-                                    TextEntry::make('sosial_media')
-                                        ->url(url: fn(School $record): string => $record->sosial_media ? $record->sosial_media : '')
-                                        ->openUrlInNewTab()
-                                        ->label('Sosial Media'),
+                                    TextEntry::make('social_media')
+                                        ->url(url: fn(School $record): string => $record->social_media ? $record->social_media : '')
+                                        ->openUrlInNewTab(),
                                 ])->from('md'),
 
                             ]),
@@ -150,8 +149,7 @@ class SchoolResource extends Resource
                         Section::make('Detail')
                             ->collapsible()  // Add collapsible functionality
                             ->schema([
-                                TextEntry::make('deskripsi')
-                                    ->label('Deskripsi'),
+                                TextEntry::make('description'),
                                 TextEntry::make('users.name')
                                     ->label('Operator')
                                     ->icon('heroicon-s-user-circle')
@@ -161,25 +159,25 @@ class SchoolResource extends Resource
                                     ->expandableLimitedList(),
                             ]),
 
-                        Section::make('Bantuan')
+                        Section::make('Fundings')
                             ->collapsible()
                             ->schema([
-                                RepeatableEntry::make('bantuan')
+                                RepeatableEntry::make('fundings')
                                     ->label('')
                                     ->schema([
-                                        TextEntry::make('nama_bantuan'),
-                                        TextEntry::make('total_bantuan')->money(currency: 'IDR'),
-                                        TextEntry::make('sumber_bantuan')
+                                        TextEntry::make('name'),
+                                        TextEntry::make('amount')->money(currency: 'IDR'),
+                                        TextEntry::make('source')
                                     ])
                                     ->grid(2)
                                     ->placeholder('Sekolah belum menerima bantuan.')
 
                             ]),
 
-                        Section::make('Produk')
+                        Section::make('Products')
                             ->collapsible()
                             ->schema([
-                                RepeatableEntry::make('produk')
+                                RepeatableEntry::make('products')
                                     ->hiddenLabel()
                                     ->grid(2)
                                     ->schema([
@@ -192,15 +190,15 @@ class SchoolResource extends Resource
                                                 ]),
                                             Fieldset::make('')
                                                 ->schema([
-                                                    TextEntry::make('nama_produk')
+                                                    TextEntry::make('name')
                                                         ->hiddenLabel()
                                                         ->weight(FontWeight::Bold)
                                                         ->size(TextEntry\TextEntrySize::Large),
-                                                    TextEntry::make('harga_produk')->money(currency: 'IDR')
+                                                    TextEntry::make('price')->money(currency: 'IDR')
                                                         ->hiddenLabel()
                                                         ->weight(FontWeight::SemiBold)
                                                         ->size(TextEntry\TextEntrySize::ExtraSmall),
-                                                    TextEntry::make('deskripsi')
+                                                    TextEntry::make('description')
                                                         ->hiddenLabel()
                                                         ->size(TextEntry\TextEntrySize::Small),
                                                 ])->columns(1),

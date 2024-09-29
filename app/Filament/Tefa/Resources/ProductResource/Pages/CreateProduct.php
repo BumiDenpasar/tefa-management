@@ -13,7 +13,7 @@ class CreateProduct extends CreateRecord
 
     public function mutateFormDataBeforeCreate(array $data): array
     {
-        $data['id_sekolah'] = Auth::user()->id_sekolah;
+        $data['school_id'] = Auth::user()->school_id;
         return $data;
     }
 }

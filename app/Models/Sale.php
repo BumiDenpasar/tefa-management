@@ -16,9 +16,9 @@ class Sale extends Model
     use HasFactory;
 
     protected $fillable = [
-        'id_produk',
-        'jumlah',
-        'pemasukan',
+        'product_id',
+        'amount',
+        'income',
     ];
 
    
@@ -27,20 +27,27 @@ class Sale extends Model
     {
         static::addGlobalScope('by_user', function (Builder $builder) {
             if (Auth::check() && !Auth::user()->is_admin) {
-                $builder->whereHas('produk', function ($query) {
-                    $query->where('id_sekolah', Auth::user()->id_sekolah);
+                $builder->whereHas('product', function ($query) {
+                    $query->where('school_id', Auth::user()->school_id);
                 });
             }
         });
     }
 
-    public function produk(): HasOne
+    public function product(): HasOne
     {
-        return $this->hasOne(Product::class, 'id', 'id_produk');
+        return $this->hasOne(Product::class, 'id', 'product_id');
     }
 
-    public function sekolah() : HasOneThrough
+    public function school() : HasOneThrough
     {
-        return $this->hasOneThrough(School::class, Product::class, 'id', 'id', localKey: 'id_produk', secondLocalKey: 'id_sekolah');
+        return $this->hasOneThrough(
+            School::class,        
+            Product::class,      
+            'school_id',            // Foreign key on the Product table (linking Product to School)
+            'id',                   // Foreign key on the School table (linking School to Product)
+            'product_id',           // Local key on the Sale model (linking Sale to Product)
+            'id'                    // Local key on the Product model (linking Product to School)
+        );
     }
 }

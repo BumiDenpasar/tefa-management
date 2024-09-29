@@ -11,12 +11,31 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::create('schools', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('logo');
+            $table->string('social_media');
+            $table->string('tefa_name');
+            $table->longText('description');
+            $table->string('contact_number');
+            $table->string(column: 'npsn');
+            $table->timestamps();
+        });
+
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->boolean('is_admin')->default(false);
+            $table->foreignId('school_id')
+            ->references('id')->on('schools')
+            ->constrained()
+            ->onUpdate('cascade')
+            ->onDelete('cascade')
+            ->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
@@ -42,6 +61,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('schools');
         Schema::dropIfExists('users');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');

@@ -10,14 +10,14 @@ class Funding extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'nama_bantuan',
-        'total_bantuan',
-        'sumber_bantuan',
+        'name',
+        'amount',
+        'source',
     ];
 
-    public function sekolah(): BelongsToMany
+    public function schools(): BelongsToMany
     {
-        return $this->belongsToMany(School::class, "school_fundings", "id_sekolah", "id_sekolah"
-    , "id_bantuan");
+        return $this->belongsToMany(School::class, "school_fundings", "school_id", "school_id"
+    , "funding_id");
     }
 }

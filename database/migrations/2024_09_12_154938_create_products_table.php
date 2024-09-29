@@ -13,14 +13,16 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_sekolah')
+            $table->string('img');
+            $table->longText('description');
+            $table->foreignId('school_id')
             ->references('id')->on('schools')
             ->constrained()
             ->onUpdate('cascade')
             ->onDelete('cascade');
-            $table->string('nama_produk');
-            $table->bigInteger('harga_produk');
-            $table->integer('total_jual');
+            $table->string('name');
+            $table->bigInteger('price');
+            $table->integer('total_sales');
             $table->timestamps();
         });
     }
