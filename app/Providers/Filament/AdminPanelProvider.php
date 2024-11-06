@@ -9,6 +9,7 @@ use Filament\Enums\ThemeMode;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\MenuItem;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -33,6 +34,12 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->profile()
+            ->userMenuItems([
+                MenuItem::make()
+                    ->label('Print Report')
+                    ->icon('heroicon-o-newspaper')
+                    ->url('/admin/school_report')
+            ])
             ->colors([
                 'danger' => Color::Red,
                 'gray' => Color::Zinc,

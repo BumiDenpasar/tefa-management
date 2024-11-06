@@ -925,7 +925,7 @@
           return false;
         }
     
-        const textArray = ["Education!", "Sell Product!", "Marketing!"];
+        const textArray = ["Monitoring", "Management", "TeFa"];
         let textIndex = 0;
         let charIndex = 0;
         let isDeleting = false;
