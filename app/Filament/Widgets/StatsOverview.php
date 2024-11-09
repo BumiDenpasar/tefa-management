@@ -22,8 +22,9 @@ class StatsOverview extends BaseWidget
          // Hitung total pemasukan
          $totalRevenue = Sale::sum('income');
  
-         $previousMonthSales = Sale::whereMonth('created_at', now()->subMonth()->month)
-         ->sum('amount');
+         $currentMonthProfit = Sale::whereMonth('created_at', now()->month)
+         ->sum('income');
+ 
          
         $currentMonthSales = Sale::whereMonth('created_at', now()->month)
         ->sum('amount');
@@ -34,25 +35,15 @@ class StatsOverview extends BaseWidget
         $previousMonthProfit = Sale::whereMonth('created_at', now()->subMonth()->month)
         ->sum('income');
 
-        $profitGrowth = $previousMonthProfit > 0 ? (($currentMonthProfit - $previousMonthProfit) / $previousMonthProfit) * 100 : 100;
-        
-        $salesGrowth = $previousMonthSales > 0 ? (($currentMonthSales - $previousMonthSales) / $previousMonthSales) * 100 : 100;
-
          
         return [
             Stat::make('Total Product', number_format($totalProduct)),
-            Stat::make('Total Sales', number_format($totalProductsSold))
-            ->description($salesGrowth.'% increase')
-            ->descriptionIcon('heroicon-m-arrow-trending-up')
-            ->color($salesGrowth > 0 ? "success" : "danger"),
+            Stat::make('Total Sales', number_format($totalProductsSold)),
 
-            Stat::make('Total Income', 'Rp ' . number_format($totalRevenue))
-            ->description($profitGrowth.'% increase')
-            ->descriptionIcon('heroicon-m-arrow-trending-up')
-            ->color($salesGrowth > 0 ? "success" : "danger"),
+            Stat::make('Total Income', 'Rp ' . number_format($totalRevenue)),
             
             Stat::make('This Month Sales', number_format($currentMonthSales)),
-            Stat::make('Previous Month Sales', number_format($previousMonthSales)),
+            Stat::make('This Month Income', number_format($currentMonthProfit)),
             Stat::make('Previous Month Income', 'Rp ' . number_format($previousMonthProfit)),
 
             

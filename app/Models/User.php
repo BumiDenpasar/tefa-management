@@ -52,12 +52,12 @@ class User extends Authenticatable
 
     public function school(): HasOne
     {
-        return $this->hasOne(School::class, 'id', 'id_sekolah');
+        return $this->hasOne(School::class, 'id', 'school_id');
     }
 
     public function products(): HasMany
     {
-        return $this->hasMany(Product::class, 'id_sekolah', 'id_sekolah');
+        return $this->hasMany(Product::class, 'school_id', 'school_id');
     }
 
 }

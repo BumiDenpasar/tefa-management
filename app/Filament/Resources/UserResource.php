@@ -49,7 +49,8 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('school.name')
+                Tables\Columns\TextColumn::make('school.name')    
+                    ->label('School')
                     ->placeholder('Admin')
                     ->numeric()
                     ->sortable(),
